@@ -6,9 +6,10 @@
         <div class="row border border-primary">
             <div class="col border border-success p-2 m-2">
                 <h5>New Post</h5>
-                <form>
+                <form action="{% url 'index' %}" method="post">
+                    {% csrf_token %}
                     <div class="form-group">
-                        <textarea class="form-control" name="new-post-textarea" id="new-post-textarea" cols="10" rows="3"></textarea>
+                        {{ postForm }}
                     </div>
                     <button class="btn btn-primary">Post</button>
                 </form>
