@@ -61,3 +61,11 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "network/register.html")
+
+def following_view(request):
+    return render(request, "network/following.html")
+
+def profile_view(request, name):
+    return render(request, "network/profile.html", {
+        "name": name
+    })
