@@ -20,6 +20,7 @@ class PostForm(forms.Form):
         'rows': 3
     }))
 
+
 def index(request):
     if request.method == "POST":
         # New post 
@@ -27,23 +28,27 @@ def index(request):
         # Check if valid
         if new_post_form.is_valid():
             # Get username
-            username = "" ## <<<< THIS IS WHERE I LEFT OFF, get username
+            current_user = request.user
             # Extract content of post
             content = new_post_form.cleaned_data["content"]
             # Get current time
-            time = datetime.datetime.now().strftime("%b/%d/%y %I:%M %p")
+            # time = datetime.datetime.now().strftime("%b/%d/%y %I:%M %p")
             # Number of likes
             likes = 0
             # Create the post 
-            new_post = Post(username, content, time, likes)
-            # Print to console
-            print(new_post, new_post.username, new_post.content, new_post.time, new_post.likes)
+            new_post = Post(user=current_user, content=content, likes=likes)
+            new_post.save()
+            print(new_post)
+
             return render(request, "network/index.html", {
-                "postForm": PostForm()
+                "postForm": PostForm(),
+                "newPost": new_post,
+                "posts": list(Post.objects.all().order_by('-time'))
             })
 
     return render(request, "network/index.html", {
-        "postForm": PostForm()
+        "postForm": PostForm(),
+        "posts": list(Post.objects.all().order_by('-time'))
     })
 
 

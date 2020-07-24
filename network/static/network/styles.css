@@ -1,0 +1,32 @@
+.post {
+    padding: 0;
+    list-style-type: none;
+}
+
+.post-username {
+    font-weight: bold;
+    font-size: 32px;
+    list-style: none;
+}
+
+.post-content {
+    padding: 8px;
+    font-size: 18px;
+    border-style: outset;
+    border-color: lightgray;
+    border-radius: 16px;
+    border-width: thick;
+}
+
+.post-time {
+    text-align: right;
+    color: gray;
+    font-size: small;
+}
+
+.post-likes {
+    padding: 4px;
+    padding-left: 10px;
+    color: #0275d8;
+    font-size: 24px;
+}
