@@ -1,31 +1,36 @@
-{% extends "network/layout.html" %}
-
-{% block body %}
-    <div class="container border">
-        <h4>Profile</h4>
-        <div class="row border border-primary">
-            <div class="col border border-success p-2 m-2">
-                <h5>@{{ name }}</h5>
-                {% if user.is_authenticated %}
-                    {% if name == user.username %}
-                    {% else %}
-                        <button class="btn btn-success">Follow</button>
-                    {% endif %}
-                {% endif %}
-                <ul>
-                    <li>
-                        Followers:
-                    </li>
-                    <li>
-                        Following:
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <div class="row border border-primary">
-            <div class="col border border-success p-2 m-2">
-
-            </div>
+{% extends "network/layout.html" %} {% block body %}
+<div class="container border">
+    <h4>Profile</h4>
+    <div class="row border border-primary">
+        <div class="col border border-success p-2 m-2">
+            <h5>@{{ name }}</h5>
+            {% if user.is_authenticated %} {% if name == user.username %} {% else %}
+            <form action="{% url 'follow' user.username name %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-success">Follow</button>
+            </form>
+            {% endif %} {% endif %}
+            <ul>
+                <li>
+                    Followers: {{user_info.followers}}
+                </li>
+                <li>
+                    Following: {{user_info.following}}
+                </li>
+            </ul>
         </div>
     </div>
+    <div class="row border border-primary">
+        <div class="col border border-success p-2 m-2">
+            {% for post in user_posts %}
+            <ul class="post">
+                <li class="post-username"><a class="link-username" href="{% url 'profile' post.user.username %}">@{{ post.user.username }}</a></li>
+                <li class="post-content">{{ post.content }}</li>
+                <li class="post-likes"><i class="fa fa-thumbs-up"></i> {{ post.likes }}</li>
+                <li class="post-time">{{ post.time }}</li>
+            </ul>
+            <hr> {% endfor %}
+        </div>
+    </div>
+</div>
 {% endblock %}

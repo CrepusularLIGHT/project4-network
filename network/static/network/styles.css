@@ -5,13 +5,17 @@
 
 .post-username {
     font-weight: bold;
-    font-size: 32px;
+    font-size: 24px;
     list-style: none;
+}
+
+.link-username:hover {
+    text-decoration: none;
 }
 
 .post-content {
     padding: 8px;
-    font-size: 18px;
+    font-size: 14px;
     border-style: outset;
     border-color: lightgray;
     border-radius: 16px;
@@ -26,7 +30,7 @@
 
 .post-likes {
     padding: 4px;
-    padding-left: 10px;
+    padding-left: 16px;
     color: #0275d8;
-    font-size: 24px;
+    font-size: 16px;
 }

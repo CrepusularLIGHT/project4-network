@@ -103,10 +103,22 @@ def register(request):
     else:
         return render(request, "network/register.html")
 
+def profile_view(request, name):
+    user_info = User.objects.get(username=name)
+    return render(request, "network/profile.html", {
+        "name": user_info.username,
+        "user_info": user_info,
+        "user_posts": list(Post.objects.all().filter(user__username=name))
+    })
+
 def following_view(request):
     return render(request, "network/following.html")
 
-def profile_view(request, name):
-    return render(request, "network/profile.html", {
-        "name": name
-    })
+def follow(request, user, user_to_follow):
+    if request.method == "POST":
+        # User 1 follows User 2
+        user1 = User.objects.get(username=user)
+        user2 = User.objects.get(username=user_to_follow)
+        user2.add_follower()
+        user2.save()
+        return HttpResponseRedirect(reverse("profile", args=(user_to_follow,)))

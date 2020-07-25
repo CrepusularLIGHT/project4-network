@@ -4,7 +4,12 @@ from django.utils.timezone import now
 
 
 class User(AbstractUser):
-    # Include: Followers, following, posts
+    # following_count = models.IntegerField(default=0)
+    # followers_count = models.IntegerField(default=0)
+
+    # def add_follower(self, follower):
+    #     self.followers_count = self.followers_count + 1
+    #     return self.followers_count
     pass
 
 class Post(models.Model):
@@ -16,4 +21,6 @@ class Post(models.Model):
     def __str__(self):
         return f"{self.user.username}: {self.content} -- {self.time} - likes: {self.likes}"
 
-    
+class Follower(models.Model):
+    username = models.CharField(default='', max_length=150)
+    following = models.ManyToManyField(User, blank=True, related_name="followers")
