@@ -3,33 +3,37 @@
     <h4>Profile</h4>
     <div class="row border border-primary">
         <div class="col border border-success p-2 m-2">
-            <h5>@{{ name }}</h5>
-            {% if user.is_authenticated %} {% if name == user.username %} {% else %}
-            <form action="{% url 'follow' user.username name %}" method="post">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-success">Follow</button>
-            </form>
-            {% endif %} {% endif %}
-            <ul>
-                <li>
-                    Followers: {{user_info.followers}}
+            <h3>@{{ name }}</h3>
+            
+            <ul class="profile">
+                <li class="followers">
+                    Followers: {{user_info.followers_count}}
                 </li>
-                <li>
-                    Following: {{user_info.following}}
+                <li class="following">
+                    Following: {{user_info.following_count}}
                 </li>
             </ul>
+            {% if user.is_authenticated %}
+                {% if name == user.username %} 
+                {% else %}
+                    {% if user_is_following %}
+                        <form action="{% url 'unfollow' user.username name %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-outline-success">Unfollow</button>
+                        </form>
+                    {% else %}
+                        <form action="{% url 'follow' user.username name %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-success">Follow</button>
+                        </form>
+                    {% endif %}
+                {% endif %} 
+            {% endif %}
         </div>
     </div>
     <div class="row border border-primary">
         <div class="col border border-success p-2 m-2">
-            {% for post in user_posts %}
-            <ul class="post">
-                <li class="post-username"><a class="link-username" href="{% url 'profile' post.user.username %}">@{{ post.user.username }}</a></li>
-                <li class="post-content">{{ post.content }}</li>
-                <li class="post-likes"><i class="fa fa-thumbs-up"></i> {{ post.likes }}</li>
-                <li class="post-time">{{ post.time }}</li>
-            </ul>
-            <hr> {% endfor %}
+            {% include "modules/posts.html" %}
         </div>
     </div>
 </div>

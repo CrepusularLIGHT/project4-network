@@ -17,27 +17,14 @@
     {% else %}
     <div class="row border border-primary">
         <div class="col border border-success p-2 m-2">
-            <h5>Your Post</h5>
-            <ul>
-                <li>@{{ newPost.user.username }}</li>
-                <li>{{ newPost.content }}</li>
-                <li>{{ newPost.time }}</li>
-                <li>{{ newPost.likes }}</li>
-            </ul>
+            <span style="color:#5cb85c">Thank you for submitting your post!</span>
         </div>
     </div>
     {% endif %} {% endif %}
 
     <div class="row border border-primary">
         <div class="col border border-success p-2 m-2">
-            {% for post in posts %}
-            <ul class="post">
-                <li class="post-username"><a class="link-username" href="{% url 'profile' post.user.username %}">@{{ post.user.username }}</a></li>
-                <li class="post-content">{{ post.content }}</li>
-                <li class="post-likes"><i class="fa fa-thumbs-up"></i> {{ post.likes }}</li>
-                <li class="post-time">{{ post.time }}</li>
-            </ul>
-            <hr> {% endfor %}
+            {% include "modules/posts.html" %}
         </div>
     </div>
 </div>

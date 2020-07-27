@@ -1,0 +1,24 @@
+{% for post in posts %}
+    <ul class="post">
+        <li class="post-username"><a class="link-username" href="{% url 'profile' post.user.username %}">@{{ post.user.username }}</a></li>
+        <li class="post-content">{{ post.content }}</li>
+        <li class="post-likes">
+            {% if user.is_authenticated %} 
+                {% if post.id in liked_post_id_list %}
+                    <form action="{% url 'unlike' post.id user.username %}" method=post>
+                        {% csrf_token %}
+                        <button class="btn btn-primary" type="submit"><i class="fa fa-thumbs-up"></i> {{ post.likes }}</li></button>
+                    </form>
+                {% else %}
+                    <form action="{% url 'like' post.id user.username %}" method=post>
+                        {% csrf_token %}
+                        <button class="btn btn-outline-primary" type="submit"><i class="fa fa-thumbs-up"></i> {{ post.likes }}</li></button>
+                    </form>
+                {% endif %} 
+            {% endif %}
+        <li class="post-time">{{ post.time }}</li>
+    </ul>
+    <hr> 
+{% empty %}
+    <span class="post-empty">No posts at this time!</span>
+{% endfor %}
