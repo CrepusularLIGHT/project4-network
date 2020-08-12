@@ -6,6 +6,7 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse
+from django.core.paginator import Paginator
 
 from .models import User, Post, Like, Follower, Following
 
@@ -41,7 +42,6 @@ def index(request):
             # Create the post 
             new_post = Post(user=current_user, content=content, likes=likes)
             new_post.save()
-            print(new_post)
 
             # Function that returns list of post id's liked by user
             liked_post_id_list = likedPostList(request)
@@ -53,13 +53,23 @@ def index(request):
                 "liked_post_id_list": liked_post_id_list
             })
     
-    # Function that returns list of post id's liked by user
-    liked_post_id_list = likedPostList(request)
+    if (request.user.is_authenticated):
+        # Function that returns list of post id's liked by user
+        liked_post_id_list = likedPostList(request)
 
+        # posts_all = Post.objects.all().order_by('-time')
+        # paginator = Paginator(posts_all, 10)
+        # page_number = request.GET.get('page')
+        # page_obj = paginator.get_page(page_number)
+
+        return render(request, "network/index.html", {
+            "postForm": PostForm(),
+            "posts": list(Post.objects.all().order_by('-time')),
+            "liked_post_id_list": liked_post_id_list
+        })
+    
     return render(request, "network/index.html", {
-        "postForm": PostForm(),
-        "posts": list(Post.objects.all().order_by('-time')),
-        "liked_post_id_list": liked_post_id_list
+        "posts": list(Post.objects.all().order_by('-time'))
     })
 
 
@@ -203,7 +213,6 @@ def follow(request, user, user_to_follow):
         # Get list of all followers
         all_followers = Follower.objects.filter(user=user2).all()
         all_followers_list = list(all_followers)
-        print(user2_username, "FOLLOWERS:", all_followers_list)
 
         # Determine the number of followers from length of the list
         user2.followers_count = len(all_followers_list)
@@ -225,7 +234,6 @@ def follow(request, user, user_to_follow):
         # Get list of all following
         all_following = Following.objects.filter(user=user1).all()
         all_following_list = list(all_following)
-        print(user1_username, "IS FOLLOWING:", all_following_list)
 
         # Determine the number following from length of the list
         user1.following_count = len(all_following_list)
@@ -257,7 +265,6 @@ def unfollow(request, user, user_to_unfollow):
         # Get list of all followers
         all_followers = Follower.objects.filter(user=user2).all()
         all_followers_list = list(all_followers)
-        print(user2_username, "FOLLOWERS:", all_followers_list)
 
         # Determine the number of followers from the length of the list
         user2.followers_count = len(all_followers_list)
@@ -275,7 +282,6 @@ def unfollow(request, user, user_to_unfollow):
         # Get list of all following
         all_following = Following.objects.filter(user=user1).all()
         all_following_list = list(all_following)
-        print(user1_username, "IS FOLLOWING:", all_following_list)
 
         # Determine the number of followers from the length of the list
         user1.following_count = len(all_following_list)
@@ -338,6 +344,18 @@ def unlike(request, post, user):
     return redirect(request.META['HTTP_REFERER'])
 
 
+def deletePost(request, post):
+    """ Delete post """
+
+    if (Post.objects.get(pk=post)):
+        Post.objects.get(pk=post).delete()
+    else:
+        pass
+    
+    return redirect(request.META['HTTP_REFERER'])
+
+
+
 def likedPostList(request):
     """ Returns list of id's for liked posts """ 
 
@@ -349,3 +367,4 @@ def likedPostList(request):
             liked_post_id_list.append(post.post)
     
     return liked_post_id_list
+
